@@ -13,11 +13,10 @@ services:
     volumes:
       - neo4j_data:/data
       - neo4j_logs:/logs
-      - neo4j_import:/import
+      - ./data:/import  # Mapeia o diretório local `./data` para o diretório de importação
       - neo4j_plugins:/plugins
 
 volumes:
   neo4j_data:
   neo4j_logs:
-  neo4j_import:
   neo4j_plugins:
