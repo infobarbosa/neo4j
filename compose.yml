@@ -17,6 +17,7 @@ services:
       - "7687:7687"  # Bolt protocol
     volumes:
       - /home/barbosa/labs/bases-empresas/extracted:/import  # Mapeia o diretório local para o diretório de importação
+      - ./data/neo4j:/data
     deploy:
       resources:
         limits:
