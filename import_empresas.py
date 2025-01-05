@@ -67,7 +67,7 @@ def load_empresas_in_batches(driver, file_path, batch_size):
                     with driver.session() as session:
                         session.run(query, rows=rows)
                     total_processed += len(rows)
-                    print(f"{total_processed} registros processados até agora...")  # Progresso
+                    print(f"{total_processed} empresas processados até agora no arquivo {file_path}...")  # Progresso
                     rows = []  # Reseta o batch
             except Exception as e:
                 # Loga o erro com o número da linha
