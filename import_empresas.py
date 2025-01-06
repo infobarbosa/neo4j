@@ -14,7 +14,7 @@ EMPRESA_FILES = [f"Empresas{i}.csv" for i in range(10)]  # Empresas0.csv, Empres
 # Caminho para o arquivo de log de erros
 ERROR_LOG_FILE = "empresas_erros.log"
 
-BATCH_SIZE = 500  # Define o tamanho do batch para commits parciais
+BATCH_SIZE = 2000  # Define o tamanho do batch para commits parciais
 
 def clean_row(row):
     """
