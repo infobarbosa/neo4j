@@ -14,19 +14,27 @@ SOCIOS_FILES = [f"Socios{i}.csv" for i in range(10)]  # Socios0.csv, Socios1.csv
 # Caminho para o arquivo de log de erros
 ERROR_LOG_FILE = "socios_erros.log"
 
-BATCH_SIZE = 500  # Define o tamanho do batch para commits parciais
+BATCH_SIZE = 2000  # Define o tamanho do batch para commits parciais
 
 def create_constraints(driver):
     """
     Cria restrições de unicidade para garantir que cada sócio seja identificado exclusivamente.
     """
-    constraint_query = """
-    CREATE CONSTRAINT unique_socio_cpf_cnpj IF NOT EXISTS
-    FOR (s:Socio)
-    REQUIRE (s.cpf_cnpj_socio, s.cnpj_base) IS UNIQUE;
-    """
+    constraints = [
+        """
+        CREATE CONSTRAINT unique_socio_cpf_cnpj IF NOT EXISTS
+        FOR (s:Socio)
+        REQUIRE (s.cpf_cnpj_socio, s.cnpj_base) IS UNIQUE;
+        """,
+        """
+        CREATE CONSTRAINT unique_empresa_cnpj_base IF NOT EXISTS
+        FOR (e:Empresa)
+        REQUIRE e.cnpj_base IS UNIQUE;
+        """
+    ]
     with driver.session() as session:
-        session.run(constraint_query)
+        for constraint_query in constraints:
+            session.run(constraint_query)
 
 def log_error(error_message):
     """
@@ -35,9 +43,9 @@ def log_error(error_message):
     with open(ERROR_LOG_FILE, "a") as log_file:
         log_file.write(error_message + "\n")
 
-def load_socios_in_batches(driver, file_path, batch_size):
+def load_socios_with_relationships(driver, file_path, batch_size):
     """
-    Carrega os dados de um arquivo CSV para o banco de dados Neo4j em batches.
+    Carrega os dados de um arquivo CSV para o banco de dados Neo4j em batches e cria relacionamentos.
     """
     query = """
     UNWIND $rows AS row
@@ -49,7 +57,10 @@ def load_socios_in_batches(driver, file_path, batch_size):
         s.cpf_representante = row[6],
         s.nome_representante = row[7],
         s.qualificacao_representante = row[8],
-        s.faixa_etaria = row[9];
+        s.faixa_etaria = row[9]
+    WITH s, row
+    MATCH (e:Empresa {cnpj_base: row[0]})  // Encontra a empresa correspondente
+    MERGE (s)-[:SOCIO_DE]->(e);  // Cria o relacionamento
     """
     rows = []
     total_processed = 0
@@ -64,7 +75,7 @@ def load_socios_in_batches(driver, file_path, batch_size):
                     with driver.session() as session:
                         session.run(query, rows=rows)
                     total_processed += len(rows)
-                    print(f"{total_processed} sócios processados até agora no arquivo {file_path}...")
+                    print(f"{total_processed} sócios processados e relacionados até agora no arquivo {file_path}...")
                     rows = []  # Reseta o batch
             except Exception as e:
                 # Loga o erro com o número da linha e os valores da linha
@@ -99,12 +110,12 @@ def main():
     print("Criando restrições de unicidade...")
     create_constraints(driver)
 
-    # Importa os arquivos de Sócios
+    # Importa os arquivos de Sócios e relaciona com Empresas
     for file_name in SOCIOS_FILES:
         file_path = os.path.join(CSV_DIR, file_name)
         if os.path.exists(file_path):
             print(f"Carregando arquivo: {file_name}")
-            load_socios_in_batches(driver, file_path, BATCH_SIZE)
+            load_socios_with_relationships(driver, file_path, BATCH_SIZE)
         else:
             print(f"Arquivo não encontrado: {file_name}")
             log_error(f"Arquivo não encontrado: {file_name}")
