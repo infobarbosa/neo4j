@@ -1,8 +1,5 @@
-./data/neo4j
-./neo4j/*
-./neo4j/data/*
-./neo4j
-
+data/neo4j-lab-container
+data/neo4j-lab-container/*
 *.tar.gz
 
 # Byte-compiled / optimized / DLL files
