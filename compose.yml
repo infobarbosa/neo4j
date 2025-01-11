@@ -13,6 +13,7 @@ services:
       - "7474:7474"  # Neo4j Browser
       - "7687:7687"  # Bolt protocol
     volumes:
+      - data/neo4j-lab-container/data:/data
       - /home/barbosa/labs/bases-empresas/extracted:/import  # Mapeia o diretório local para o diretório de importação
     deploy:
       resources:
