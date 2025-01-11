@@ -57,10 +57,18 @@ def load_socios_with_relationships(driver, file_path, batch_size):
         s.cpf_representante = row[6],
         s.nome_representante = row[7],
         s.qualificacao_representante = row[8],
-        s.faixa_etaria = row[9]
+        s.faixa_etaria = row[9],
+        s.codigo_pais = row[10],  // Novo campo para código do país
+        s.codigo_qualificacao_socio = row[11]  // Novo campo para código de qualificação
     WITH s, row
     MATCH (e:Empresa {cnpj_base: row[0]})  // Encontra a empresa correspondente
-    MERGE (s)-[:SOCIO_DE]->(e);  // Cria o relacionamento
+    MERGE (s)-[:SOCIO_DE]->(e)
+    WITH s, row
+    MATCH (pais:Pais {codigo_pais: row[10]})  // Encontra o país correspondente
+    MERGE (s)-[:ORIGEM]->(pais)
+    WITH s, row
+    MATCH (qualificacao:Qualificacao {codigo_qualificacao: row[11]})  // Encontra a qualificação correspondente
+    MERGE (s)-[:QUALIFICADO_COMO]->(qualificacao);
     """
     rows = []
     total_processed = 0
