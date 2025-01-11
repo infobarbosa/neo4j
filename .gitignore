@@ -1,4 +1,6 @@
 ./data/neo4j
+./neo4j/*
+./neo4j/data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
