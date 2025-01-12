@@ -81,7 +81,11 @@ def load_estabelecimentos_in_batches(driver, file_path, batch_size):
         e.ddd_telefone_1 = row[21],
         e.ddd_telefone_2 = row[22],
         e.ddd_fax = row[23],
-        e.email = row[24];
+        e.email = row[24],
+        e.natureza_juridica = row[25];  // Adiciona natureza_juridica
+    WITH e, row
+    MATCH (natureza:Natureza {codigo_natureza: row[25]})
+    CREATE (e)-[:CLASSIFICADO_COMO]->(natureza);
     """
     rows = []
     total_processed = 0  # Contador para registros processados
