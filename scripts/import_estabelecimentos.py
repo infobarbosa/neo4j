@@ -85,7 +85,10 @@ def load_estabelecimentos_in_batches(driver, file_path, batch_size):
         e.natureza_juridica = row[25];  // Adiciona natureza_juridica
     WITH e, row
     MATCH (natureza:Natureza {codigo_natureza: row[25]})
-    CREATE (e)-[:CLASSIFICADO_COMO]->(natureza);
+    CREATE (e)-[:CLASSIFICADO_COMO]->(natureza)
+    WITH e, row
+    MATCH (municipio:Municipio {codigo_municipio: row[20]})
+    CREATE (e)-[:LOCALIZADO_EM]->(municipio);
     """
     rows = []
     total_processed = 0  # Contador para registros processados
