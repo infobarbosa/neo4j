@@ -15,6 +15,9 @@ services:
     volumes:
       - ./data/neo4j-lab-container/data:/data
       - /home/barbosa/labs/bases-empresas/extracted:/import  # Mapeia o diretório local para o diretório de importação
+    user: '1000'
+    group_add:
+    - '1000'
     deploy:
       resources:
         limits:
