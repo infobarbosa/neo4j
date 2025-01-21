@@ -63,6 +63,7 @@ def load_socios_with_relationships(driver, file_path, batch_size):
     WITH s, row
     MATCH (e:Empresa {cnpj_base: row[0]})  // Encontra a empresa correspondente
     MERGE (s)-[:SOCIO_DE]->(e)
+    MERGE (e)-[:TEM_COMO_SOCIO]->(s)  // Relacionamento adicional entre empresa e sócio
     WITH s, row
     MATCH (pais:Pais {codigo_pais: row[10]})  // Encontra o país correspondente
     MERGE (s)-[:ORIGEM]->(pais)
