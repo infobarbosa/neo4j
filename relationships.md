@@ -134,3 +134,4 @@ Após criar os relacionamentos, valide os dados com consultas como:
    MATCH ()-[rel]->()
    RETURN type(rel), COUNT(rel);
    ```
+
