@@ -44,30 +44,54 @@ def generate_graph(cnpj_base):
 
     for empresa, socio in data:
         # Adiciona a empresa central
-        net.add_node(empresa["cnpj_base"], label=f"Empresa: {empresa['razao_social']}", color="blue")
+        net.add_node(empresa["cnpj_base"], label=f"Empresa: {empresa['razao_social']}", color="#005CA9", size=30)
 
-        # Adiciona o sócio e o relacionamento com a empresa central
-        net.add_node(socio["cpf_cnpj_socio"], label=f"Socio: {socio['nome']}", color="green")
+        # Adiciona os sócios e o relacionamento com a empresa central
+        net.add_node(socio["cpf_cnpj_socio"], label=f"Socio: {socio['nome']}", color="#FF6A00", size=20)
         net.add_edge(socio["cpf_cnpj_socio"], empresa["cnpj_base"], label="SOCIO_DE")
 
+    # Define as opções do grafo em formato JSON válido
     net.set_options('''
-    var options = {
+    {
       "nodes": {
         "borderWidth": 2,
-        "size": 25
+        "font": {
+          "size": 14,
+          "color": "#ffffff",
+          "face": "Arial",
+          "align": "top"
+        },
+        "shape": "dot",
+        "size": 15
       },
       "edges": {
-        "color": {
-          "inherit": true
+        "width": 1,
+        "font": {
+          "size": 10,
+          "color": "#dddddd",
+          "face": "Courier New",
+          "align": "horizontal"
         },
-        "smooth": false
+        "smooth": {
+          "type": "dynamic"
+        }
       },
       "physics": {
-        "enabled": true
+        "enabled": true,
+        "barnesHut": {
+          "gravitationalConstant": -30000,
+          "centralGravity": 0.1,
+          "springLength": 300,
+          "springConstant": 0.05
+        },
+        "minVelocity": 0.5
       }
     }
     ''')
+
     return net
+
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
