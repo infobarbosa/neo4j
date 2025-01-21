@@ -45,6 +45,7 @@ def load_empresas_in_batches(driver, file_path, batch_size):
     """
     Carrega os dados de um arquivo CSV para o banco de dados Neo4j em batches.
     """
+
     query = """
     UNWIND $rows AS row
     MERGE (e:Empresa {cnpj_base: row[0]})  // Identificador único
@@ -52,8 +53,13 @@ def load_empresas_in_batches(driver, file_path, batch_size):
         e.natureza_juridica = row[2],
         e.porte = row[3],
         e.capital_social = toFloat(replace(row[4], ',', '.')),
-        e.situacao_cadastral = row[5];
+        e.situacao_cadastral = row[5]
+    WITH e, row
+    OPTIONAL MATCH (motivo:Motivo {codigo_motivo: row[5]})  // Encontra o motivo correspondente
+    FOREACH (_ IN CASE WHEN motivo IS NOT NULL THEN [1] ELSE [] END | 
+        MERGE (e)-[:SITUACAO]->(motivo));
     """
+
     rows = []
     total_processed = 0  # Contador para registros processados
 
