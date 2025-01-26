@@ -40,38 +40,42 @@ def generate_graph(cnpj_base):
 
     for empresa, socio in data:
         # Adiciona a empresa central
-        net.add_node(empresa["cnpj_base"], label=f"Empresa: {empresa['razao_social']}", color="#005CA9", shape="ellipse")
+        net.add_node(empresa["cnpj_base"], label=f"Empresa: {empresa['razao_social']}", color="#005CA9", shape="ellipse", size=30)
 
         # Adiciona o sócio e o relacionamento com a empresa central
-        net.add_node(socio["cpf_cnpj_socio"], label=f"Socio: {socio['nome']}", color="#FF6A00", shape="circle")
+        net.add_node(socio["cpf_cnpj_socio"], label=f"Socio: {socio['nome']}", color="#FF6A00", shape="circle", size=20)
         net.add_edge(socio["cpf_cnpj_socio"], empresa["cnpj_base"], label="SOCIO_DE")
 
     net.set_options('''
     var options = {
       "nodes": {
         "borderWidth": 2,
-        "size": 30,
+        "size": 15,
         "font": {
           "size": 14,
-          "color": "white"
+          "color": "#ffffff",
+          "face": "Arial",
+          "align": "top"
         }
       },
       "edges": {
         "width": 1,
         "font": {
-          "size": 12,
-          "color": "#dddddd"
+          "size": 10,
+          "color": "#dddddd",
+          "face": "Courier New",
+          "align": "horizontal"
         },
         "smooth": {
-          "type": "continuous"
+          "type": "dynamic"
         }
       },
       "physics": {
         "barnesHut": {
           "gravitationalConstant": -30000,
-          "centralGravity": 0.3,
-          "springLength": 200,
-          "springConstant": 0.04
+          "centralGravity": 0.1,
+          "springLength": 300,
+          "springConstant": 0.05
         },
         "minVelocity": 0.75
       }
