@@ -35,16 +35,16 @@ def generate_graph(cnpj_base):
     """
     data = fetch_graph_data(cnpj_base)
 
-    net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white")
+    net = Network(height="750px", width="100%", bgcolor="#dbe4eb", font_color="white")
     net.barnes_hut()
 
     for empresa, socio in data:
         # Adiciona a empresa central
-        net.add_node(empresa["cnpj_base"], label=f"Empresa: {empresa['razao_social']}", color="#005CA9", shape="ellipse", size=30)
+        net.add_node(empresa["cnpj_base"], label=f"{empresa['razao_social']}", color="#000000", shape="circle", size=50)
 
         # Adiciona o sócio e o relacionamento com a empresa central
-        net.add_node(socio["cpf_cnpj_socio"], label=f"Socio: {socio['nome']}", color="#FF6A00", shape="circle", size=20)
-        net.add_edge(socio["cpf_cnpj_socio"], empresa["cnpj_base"], label="SOCIO_DE")
+        net.add_node(socio["cpf_cnpj_socio"], label=f"{socio['nome']}", color="#000000", shape="box", size=10)
+        net.add_edge(socio["cpf_cnpj_socio"], empresa["cnpj_base"], label="Sócio de", arrowStrikethrough = True  )
 
     net.set_options('''
     var options = {
@@ -54,16 +54,22 @@ def generate_graph(cnpj_base):
         "font": {
           "size": 14,
           "color": "#ffffff",
-          "face": "Arial",
+          "face": "Myriad",
           "align": "top"
         }
       },
       "edges": {
+        "arrows": {
+          "to": {
+            "enabled": true, 
+            "scaleFactor": 0.5
+          }
+        },
         "width": 1,
         "font": {
           "size": 10,
-          "color": "#dddddd",
-          "face": "Courier New",
+          "color": "#000000",
+          "face": "Myriad",
           "align": "horizontal"
         },
         "smooth": {
@@ -72,9 +78,9 @@ def generate_graph(cnpj_base):
       },
       "physics": {
         "barnesHut": {
-          "gravitationalConstant": -30000,
+          "gravitationalConstant": -20000,
           "centralGravity": 0.1,
-          "springLength": 300,
+          "springLength": 200,
           "springConstant": 0.05
         },
         "minVelocity": 0.75
