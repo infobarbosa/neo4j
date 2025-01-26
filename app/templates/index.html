@@ -3,14 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca de Sócios</title>
+    <title>Grafo de Sócios</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auUHIzE3JWAmHGAsR69j0PJ3K4RZCztmI3aT"
+        crossorigin="anonymous"
+    />
 </head>
 <body>
-    <h1>Busca de Sócios de Empresas</h1>
-    <form method="POST">
-        <label for="cnpj_base">CNPJ Base:</label>
-        <input type="text" id="cnpj_base" name="cnpj_base" required>
-        <button type="submit">Buscar</button>
-    </form>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Visualizador de Grafo de Sócios</h1>
+        <form method="POST" class="mb-4">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="cnpj_base"
+                    class="form-control"
+                    placeholder="Digite o CNPJ base"
+                    value="{{ cnpj_base or '' }}"
+                    required
+                />
+                <button type="submit" class="btn btn-primary">Gerar Grafo</button>
+            </div>
+        </form>
+        {% if graph_html %}
+            <div>
+                {{ graph_html|safe }}
+            </div>
+        {% else %}
+            <p class="text-center">Digite um CNPJ base para visualizar o grafo.</p>
+        {% endif %}
+    </div>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"
+    ></script>
 </body>
 </html>

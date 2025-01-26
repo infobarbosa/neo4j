@@ -1,3 +1,4 @@
 flask
+markupsafe
 pyvis
 neo4j
