@@ -3,9 +3,9 @@ services:
     image: neo4j:5.12
     container_name: neo4j-lab-container
     environment:
-      - NEO4J_AUTH=neo4j/SuperSenha123
+      - NEO4J_AUTH=none
       - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
-      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+      - NEO4J_PLUGINS=["apoc"]
       - NEO4J_server_memory_heap_initial__size=6G
       - NEO4J_server_memory_heap_max__size=6G
       - NEO4J_server_memory_pagecache_size=2G
