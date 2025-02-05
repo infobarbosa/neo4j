@@ -4,8 +4,6 @@ import os
 
 # Configuração do Neo4j
 NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASSWORD = "SuperSenha123"
 
 # Caminho do diretório contendo os arquivos de Empresas
 CSV_DIR = "/home/barbosa/labs/bases-empresas/extracted"
@@ -102,7 +100,7 @@ def main():
         os.remove(ERROR_LOG_FILE)
 
     # Inicializa o driver do Neo4j
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    driver = GraphDatabase.driver(NEO4J_URI)
 
     # Cria restrições de unicidade
     print("Criando restrições de unicidade...")
