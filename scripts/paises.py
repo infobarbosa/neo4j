@@ -3,14 +3,16 @@ import csv
 
 # Configuração do Neo4j
 NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASSWORD = "SuperSenha123"
 
 # Caminho do arquivo CSV
 CSV_FILE = "/home/barbosa/labs/bases-empresas/extracted/Paises.csv"
 
 def clean_row(row):
     return [col.replace('"', '').replace("\\", "") if col else None for col in row]
+
+def create_constraint(driver):
+    with driver.session() as session:
+        session.run("CREATE CONSTRAINT IF NOT EXISTS ON (p:Pais) ASSERT p.codigo_pais IS UNIQUE")
 
 def load_paises(driver):
     query = """
@@ -27,7 +29,8 @@ def load_paises(driver):
         session.run(query, rows=rows)
 
 def main():
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    driver = GraphDatabase.driver(NEO4J_URI)
+    create_constraint(driver)
     load_paises(driver)
     driver.close()
 
