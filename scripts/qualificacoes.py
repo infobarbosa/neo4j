@@ -2,12 +2,14 @@ from neo4j import GraphDatabase
 import csv
 
 NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASSWORD = "SuperSenha123"
 CSV_FILE = "/home/barbosa/labs/bases-empresas/extracted/Qualificacoes.csv"
 
 def clean_row(row):
     return [col.replace('"', '').replace("\\", "") if col else None for col in row]
+
+def create_constraint(driver):
+    with driver.session() as session:
+        session.run("CREATE CONSTRAINT IF NOT EXISTS ON (q:Qualificacao) ASSERT q.codigo_qualificacao IS UNIQUE")
 
 def load_qualificacoes(driver):
     query = """
@@ -24,7 +26,8 @@ def load_qualificacoes(driver):
         session.run(query, rows=rows)
 
 def main():
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    driver = GraphDatabase.driver(NEO4J_URI)
+    create_constraint(driver)
     load_qualificacoes(driver)
     driver.close()
 
