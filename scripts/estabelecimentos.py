@@ -5,8 +5,6 @@ import sys
 
 # Configuração do Neo4j
 NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PASSWORD = "SuperSenha123"
 
 ERROR_LOG_FILE = "estabelecimentos_erros.log"
 BATCH_SIZE = 500
@@ -105,7 +103,7 @@ def main():
     if os.path.exists(ERROR_LOG_FILE):
         os.remove(ERROR_LOG_FILE)
 
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    driver = GraphDatabase.driver(NEO4J_URI)
 
     print("Criando restrições de unicidade...")
     create_constraints(driver)
