@@ -27,6 +27,7 @@ def load_motivos(driver):
 
 def main():
     driver = GraphDatabase.driver(NEO4J_URI)
+    create_constraints(driver)
     load_motivos(driver)
     driver.close()
 
